@@ -1616,6 +1616,7 @@ static unsigned char *stbi__convert_format(unsigned char *data, int img_n, int r
          default: STBI_ASSERT(0);
       }
       #undef STBI__CASE
+      #undef STBI__COMBO
    }
 
    STBI_FREE(data);
@@ -1665,6 +1666,7 @@ static stbi__uint16 *stbi__convert_format16(stbi__uint16 *data, int img_n, int r
          default: STBI_ASSERT(0);
       }
       #undef STBI__CASE
+      #undef STBI__COMBO
    }
 
    STBI_FREE(data);
