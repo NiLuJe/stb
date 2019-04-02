@@ -3469,6 +3469,7 @@ static stbi_uc* stbi__resample_row_v_2(stbi_uc *out, stbi_uc *in_near, stbi_uc *
    // need to generate two samples vertically for every one in input
    int i;
    STBI_NOTUSED(hs);
+   #pragma GCC ivdep
    for (i=0; i < w; ++i)
       out[i] = stbi__div4(3*in_near[i] + in_far[i] + 2);
    return out;
@@ -3488,6 +3489,7 @@ static stbi_uc*  stbi__resample_row_h_2(stbi_uc *out, stbi_uc *in_near, stbi_uc 
 
    out[0] = input[0];
    out[1] = stbi__div4(input[0]*3 + input[1] + 2);
+   #pragma GCC ivdep
    for (i=1; i < w-1; ++i) {
       int n = 3*input[i]+2;
       out[i*2+0] = stbi__div4(n+input[i-1]);
@@ -3651,6 +3653,7 @@ static stbi_uc *stbi__resample_row_generic(stbi_uc *out, stbi_uc *in_near, stbi_
    int i,j;
    STBI_NOTUSED(in_far);
    for (i=0; i < w; ++i)
+      #pragma GCC ivdep
       for (j=0; j < hs; ++j)
          out[i*hs+j] = in_near[i];
    return out;
@@ -4333,7 +4336,7 @@ static int stbi__parse_huffman_block(stbi__zbuf *a)
             stbi_uc v = *p;
             if (len) { do *zout++ = v; while (--len); }
          } else {
-            if (len) { do *zout++ = *p++; while (--len); }
+            if (len) { _Pragma("GCC ivdep") do *zout++ = *p++; while (--len); }
          }
       }
    }
@@ -4793,12 +4796,14 @@ static int stbi__create_png_image_raw(stbi__png *a, stbi_uc *raw, stbi__uint32 r
          // so we need to explicitly clamp the final ones
 
          if (depth == 4) {
+            #pragma GCC ivdep
             for (k=x*img_n; k >= 2; k-=2, ++in) {
                *cur++ = scale * ((*in >> 4)       );
                *cur++ = scale * ((*in     ) & 0x0f);
             }
             if (k > 0) *cur++ = scale * ((*in >> 4)       );
          } else if (depth == 2) {
+            #pragma GCC ivdep
             for (k=x*img_n; k >= 4; k-=4, ++in) {
                *cur++ = scale * ((*in >> 6)       );
                *cur++ = scale * ((*in >> 4) & 0x03);
@@ -4809,6 +4814,7 @@ static int stbi__create_png_image_raw(stbi__png *a, stbi_uc *raw, stbi__uint32 r
             if (k > 1) *cur++ = scale * ((*in >> 4) & 0x03);
             if (k > 2) *cur++ = scale * ((*in >> 2) & 0x03);
          } else if (depth == 1) {
+            #pragma GCC ivdep
             for (k=x*img_n; k >= 8; k-=8, ++in) {
                *cur++ = scale * ((*in >> 7)       );
                *cur++ = scale * ((*in >> 6) & 0x01);
