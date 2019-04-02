@@ -1766,8 +1766,8 @@ static unsigned char *stbi__convert_format(unsigned char *data, int img_n, int r
    }
 
    for (j=0; j < (int) y; ++j) {
-      unsigned char *src  = data + j * x * img_n   ;
-      unsigned char *dest = good + j * x * req_comp;
+      unsigned char * restrict src  = data + j * x * img_n   ;
+      unsigned char * restrict dest = good + j * x * req_comp;
 
       #define STBI__COMBO(a,b)  ((a)*8+(b))
       #define STBI__CASE(a,b)   case STBI__COMBO(a,b): _Pragma("GCC ivdep") for(i=x-1; i >= 0; --i, src += a, dest += b)
