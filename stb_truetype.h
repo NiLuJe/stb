@@ -2583,9 +2583,8 @@ static stbtt_int32  stbtt__GetGlyphGPOSInfoAdvance(const stbtt_fontinfo *info, i
                             int glyph1class = stbtt__GetGlyphClass(table + classDef1Offset, glyph1);
                             int glyph2class = stbtt__GetGlyphClass(table + classDef2Offset, glyph2);
 
-                            stbtt_uint16 class1Count = ttUSHORT(table + 12);
                             stbtt_uint16 class2Count = ttUSHORT(table + 14);
-                            STBTT_assert(glyph1class < class1Count);
+                            STBTT_assert(glyph1class < ttUSHORT(table + 12));
                             STBTT_assert(glyph2class < class2Count);
 
                             // TODO: Support more formats.
